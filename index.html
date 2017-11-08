@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--
+   - Google maps page showing SFFD stations/battalions, including address and phone number.
+   - Centered on your current location
+-->
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Traffic layer</title>
+    <style>
+        /* Always set the map height explicitly to define the size of the div * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    "use strict";
+    var infoWindow;
+    var map;
+
+    function initMap() {
+        console.log('init map');
+        const coord_san_francisco = {lat: 37.7739, lng: -122.4194};
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: coord_san_francisco
+        });
+        infoWindow = new google.maps.InfoWindow;
+
+        const trafficLayer = new google.maps.TrafficLayer(); trafficLayer.setMap(map);
+        const transitLayer = new google.maps.TransitLayer(); transitLayer.setMap(map);
+        const bikeLayer = new google.maps.BicyclingLayer(); bikeLayer.setMap(map);
+
+        // Try to get current location via HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                infoWindow.setPosition(pos);
+                infoWindow.setContent('You are here');
+                infoWindow.open(map);
+                map.setCenter(pos);
+            }, function() {
+                handleLocationError(true, infoWindow, map.getCenter());
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+        }
+
+        // Display all fire statons with small red dot and station name.  If batt is not null, include it too.
+        const stations = [];
+        stations.push({name:"1",  batt:null, coord:{lat:37.7796, lng:-122.4041}, address:"935 FOLSOM ST,SF,CA,94107"});
+        stations.push({name:"2",  batt:"B1", coord:{lat:37.7970, lng:-122.4101}, address:"1340 POWELL ST, SF, CA, 94133"});
+        stations.push({name:"3",  batt:null, coord:{lat:37.7868, lng:-122.4194}, address:"1067 POST ST, SF, CA, 94109"});
+        stations.push({name:"4",  batt:null, coord:{lat:37.7732, lng:-122.3897}, address:"1199 3RD ST,SF,CA,94107"});
+        stations.push({name:"5",  batt:null, coord:{lat:37.7807, lng:-122.4305}, address:"1301 TURK ST, SF, CA, 94115"});
+        stations.push({name:"6",  batt:null, coord:{lat:37.7670, lng:-122.4311}, address:"135 SANCHEZ ST, SF, CA, 94114"});
+        stations.push({name:"7",  batt:null, coord:{lat:37.7604, lng:-122.4149}, address:"2300 FOLSOM ST, SF, CA, 94110"});
+        stations.push({name:"8",  batt:"B3", coord:{lat:37.7771, lng:-122.3966}, address:"36 BLUXOME ST, SF, CA, 94107"});
+        stations.push({name:"9",  batt:"B10", coord:{lat:37.7454, lng:-122.4011}, address:"2245 JERROLD AVE, SF, CA, 94124"});
+        stations.push({name:"10", batt:null, coord:{lat:37.7858, lng:-122.4466}, address:"655 PRESIDIO AVE, SF, CA, 94115"});
+        stations.push({name:"11", batt:"B6", coord:{lat:37.7486, lng:-122.4267}, address:"3880 26TH ST, SF, CA, 94131"});
+        stations.push({name:"12", batt:null, coord:{lat:37.7634, lng:-122.4524}, address:"1145 STANYAN ST, SF, CA, 94117"});
+        stations.push({name:"13", batt:null, coord:{lat:37.7954, lng:-122.4015}, address:"530 SANSOME ST, SF, CA, 94112"});
+        stations.push({name:"14", batt:null, coord:{lat:37.7791, lng:-122.4858}, address:"551 26TH AVE, SF, CA, 94121"});
+        stations.push({name:"15", batt:"B9", coord:{lat:37.7231, lng:-122.4523}, address:"1001 OCEAN AVE, SF, CA, 94112"});
+        stations.push({name:"16", batt:null, coord:{lat:37.7988, lng:-122.4367}, address:"2251 GREENWICH ST, SF, CA, 94123"});
+        stations.push({name:"17", batt:null, coord:{lat:37.7277, lng:-122.3850}, address:"1295 SHAFTER AVE, SF, CA, 94124"});
+        stations.push({name:"18", batt:null, coord:{lat:37.7511, lng:-122.4903}, address:"1935 32ND AVE, SF, CA, 94116"});
+        stations.push({name:"19", batt:null, coord:{lat:37.7281, lng:-122.4788}, address:"390 BUCKINGHAM WAY, SF, CA, 94132"});
+        stations.push({name:"20", batt:null, coord:{lat:37.7513, lng:-122.4561}, address:"285 OLYMPIA WAY, SF, CA, 94131"});
+        stations.push({name:"21", batt:"B5", coord:{lat:37.7756, lng:-122.4404}, address:"1443 GROVE ST, SF, CA, 94117"});
+        stations.push({name:"22", batt:null, coord:{lat:37.7639, lng:-122.4739}, address:"1290 16TH AVE, SF, CA, 94122"});
+        stations.push({name:"23", batt:null, coord:{lat:37.7614, lng:-122.5049}, address:"1348 45TH AVE, SF, CA, 94122"});
+        stations.push({name:"24", batt:null, coord:{lat:37.7533, lng:-122.4409}, address:"100 HOFFMAN AVE, SF, CA, 94114"});
+        stations.push({name:"25", batt:null, coord:{lat:37.7476, lng:-122.3873}, address:"3305 3RD ST, SF, CA, 94124"});
+        stations.push({name:"26", batt:null, coord:{lat:37.7401, lng:-122.4332}, address:"80 DIGBY ST, SF, CA, 94131"});
+        stations.push({name:"28", batt:null, coord:{lat:37.8025, lng:-122.4095}, address:"1814 STOCKTON ST, SF, CA, 94133"});
+        stations.push({name:"29", batt:null, coord:{lat:37.7660, lng:-122.4046}, address:"299 VERMONT ST, SF, CA, 94103"});
+        stations.push({name:"31", batt:"B7", coord:{lat:37.7799, lng:-122.4707}, address:"441 12TH AVE, SF, CA, 94118"});
+        stations.push({name:"32", batt:null, coord:{lat:37.7365, lng:-122.4212}, address:"194 PARK ST, SF, CA, 94110"});
+        stations.push({name:"33", batt:null, coord:{lat:37.7109, lng:-122.4589}, address:"8 CAPITOL AVE, SF, CA, 94112"});
+        stations.push({name:"34", batt:null, coord:{lat:37.7794, lng:-122.5019}, address:"499 41ST AVE, SF, CA, 94121"});
+        stations.push({name:"35", batt:null, coord:{lat:37.7895, lng:-122.3886}, address:"398 THE EMBARCADERO S, SF, CA, 94105"});
+        stations.push({name:"36", batt:"B2", coord:{lat:37.7752, lng:-122.4211}, address:"109 OAK ST, SF, CA, 94102"});
+        stations.push({name:"37", batt:null, coord:{lat:37.7573, lng:-122.3990}, address:"798 WISCONSIN ST, SF, CA, 94107"});
+        stations.push({name:"38", batt:"B4", coord:{lat:37.7895, lng:-122.4298}, address:"2150 CALIFORNIA ST, SF, CA, 94115"});
+        stations.push({name:"39", batt:null, coord:{lat:37.7405, lng:-122.4590}, address:"1091 PORTOLA DR, SF, CA, 94127"});
+        stations.push({name:"40", batt:"B8", coord:{lat:37.7477, lng:-122.4750}, address:"2155 18TH AVE, SF, CA, 94116"});
+        stations.push({name:"41", batt:null, coord:{lat:37.7932, lng:-122.4162}, address:"1325 LEAVENWORTH ST, SF, CA, 94109"});
+        stations.push({name:"42", batt:null, coord:{lat:37.7317, lng:-122.4054}, address:"2430 SAN BRUNO AVE, SF, CA, 94134"});
+        stations.push({name:"43", batt:null, coord:{lat:37.7163, lng:-122.4315}, address:"720 MOSCOW ST, SF, CA, 94112"});
+        stations.push({name:"44", batt:null, coord:{lat:37.7166, lng:-122.4002}, address:"1298 GIRARD ST, SF, CA, 94134"});
+        stations.push({name:"48", batt:null, coord:{lat:37.8217, lng:-122.3709}, address:"400 AVE D, TI, CA, 94130"});
+        // todo: we should also include some daly city and brisbane stations
+
+
+        // Add mark for each stations
+        for (var i=0; i<stations.length; i++) {
+            var stn = stations[i];
+            console.log("coord: " + stn.coord);
+            var slabel, stitle;
+            if (stn.batt) {
+                slabel = stn.name + " " + stn.batt;
+                stitle = "Station " + stn.name + " Battalion " + stn.batt + ": " + stn.address;
+            } else {
+                slabel = stn.name;
+                stitle = "Station " + stn.name + ": " + stn.address;
+            }
+            var marker = new google.maps.Marker({
+                position: stn.coord,
+                label: slabel,
+                title: stitle,
+                map: map
+            });
+
+        }
+        console.log('map initialized');
+    }
+
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+            'Error: The Geolocation service failed.' :
+            'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?client=gme-sanfranciscofire&callback=initMap">
+</script>
+
+</body>
+</html>
