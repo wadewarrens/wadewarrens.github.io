@@ -2,7 +2,9 @@
 <!--
    - Google maps page showing SFFD stations/battalions, including address and phone number.
    - Centered on your current location
+
 -->
+
 <html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -24,6 +26,13 @@
 <body>
 <div id="map"></div>
 <script>
+/*
+  git add --all
+  git commit -m "Initial commit"
+  git push -u origin master
+  ... then connect to
+  https://wadewarrens.github.io
+*/
     "use strict";
     var infoWindow;
     var map;
@@ -142,6 +151,7 @@
     }
 </script>
 
+<!-- my personal api key -->
 <script async defer 
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPb5yRPmFoVx7SVr_90MAldMyrjpzV1OI&callback=initMap" type="text/javascript">
 </script>
