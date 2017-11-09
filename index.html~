@@ -2,19 +2,12 @@
 <!--
    - Google maps page showing SFFD stations/battalions, including address and phone number.
    - Centered on your current location
-
-  git add --all
-  git commit -m "Initial commit"
-  git push -u origin master
-  ... then connect to
-  https://wadewarrens.github.io
 -->
-
 <html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>Traffic layer</title>
+    <title>SFFD fire stations</title>
     <style>
         /* Always set the map height explicitly to define the size of the div * element that contains the map. */
         #map {
@@ -116,6 +109,8 @@
         // todo: we should also include some daly city and brisbane stations
 
 
+        var infowin = new google.maps.InfoWindow();
+
         // Add mark for each stations
         for (var i=0; i<stations.length; i++) {
             var stn = stations[i];
@@ -135,6 +130,11 @@
                 map: map
             });
 
+            google.maps.event.addListener(marker, 'click', function(){
+                infowin.setContent(this.title);
+                infowin.open(map, this);
+            });
+
         }
         console.log('map initialized');
     }
@@ -149,10 +149,15 @@
     }
 </script>
 
-<!-- my personal api key -->
-<script async defer 
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPb5yRPmFoVx7SVr_90MAldMyrjpzV1OI&callback=initMap" type="text/javascript">
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPb5yRPmFoVx7SVr_90MAldMyrjpzV1OI&callback=initMap"
+        >
 </script>
+<!--
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?client=gme-sanfranciscofire&callback=initMap">
+</script>
+-->
 
 </body>
 </html>
